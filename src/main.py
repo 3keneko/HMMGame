@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+from image_manage import from_emotions_to_image
 import numpy as np
 from hmmlearn import hmm
 from enum import Enum
@@ -8,11 +9,6 @@ import functools
 class Humour(Enum):
     JOY = 0
     SAD = 1
-
-class ShirtColor(Enum):
-    RED = 0
-    GREEN = 1
-    BLUE = 2
 
 # np.random.seed(42)
 
@@ -36,18 +32,25 @@ observations, states = teacher_model.sample(n_samples=3)
 
 print("Observed: ", *observations)
 print(teacher_model.predict_proba(observations))
+
+from_emotions_to_image(observations)
+
 possible_states = [[a, b, c] for a in Humour
                              for b in Humour for c in Humour]
+
 
 matrix_with_probas = [(poss, compute_state_probability(poss,
                             teacher_model.predict_proba(observations)))
                       for poss in possible_states]
 
+
 matrix_with_probas.sort(key=lambda x: x[1])
 matrix_with_probas.reverse()
 
+
 for a, b in matrix_with_probas:
     print(*a, "has probability", b)
+
 
 print(teacher_model.predict(observations))
 print("Answer: ", *states)
