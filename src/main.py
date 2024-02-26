@@ -6,14 +6,17 @@ from hmmlearn import hmm
 from enum import Enum
 import functools
 
-class Humour(Enum):
-    JOY = 0
-    SAD = 1
+class Humeur(Enum):
+    JOYEUX = 0
+    TRISTE = 1
 
 # np.random.seed(42)
 
 def compute_state_probability(pred, probs):
     return functools.reduce(lambda x, y: x*y,(map(lambda x, y: y[x.value], pred, probs)))
+
+def read_humour(i: int) -> Humeur:
+    return Humeur.TRISTE if i == 1 else Humeur.JOYEUX
 
 teacher_model = hmm.CategoricalHMM(n_components=2, n_iter=3)
 
@@ -35,8 +38,8 @@ print(teacher_model.predict_proba(observations))
 
 from_emotions_to_image(observations)
 
-possible_states = [[a, b, c] for a in Humour
-                             for b in Humour for c in Humour]
+possible_states = [[a, b, c] for a in Humeur
+                             for b in Humeur for c in Humeur]
 
 
 matrix_with_probas = [(poss, compute_state_probability(poss,
@@ -52,5 +55,5 @@ for a, b in matrix_with_probas:
     print(*a, "has probability", b)
 
 
-print(teacher_model.predict(observations))
-print("Answer: ", *states)
+print("\nComputer's best prediction: " ,*map(read_humour, teacher_model.predict(observations)))
+print("Real Answer: ", *map(read_humour, states))
