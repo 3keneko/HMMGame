@@ -6,7 +6,7 @@ name = "pypi"
 [packages]
 hmmlearn = "==0.3.0"
 numpy = "==1.26.0"
-pillow = "==9.4"
+pillow = "==10.2.0"
 
 [dev-packages]
 
